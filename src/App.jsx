@@ -27,6 +27,7 @@ export default function App() {
     const [openOfflineServerDialog, setOfflineServerDialog] = useState(false);
     const [loggedUser, setLoggedUser] = useState({
         logged: false,
+        username: "",
         name: "",
         avatar: "",
     });
@@ -63,7 +64,7 @@ export default function App() {
         }
     };
 
-    const verifyToken = async () => {
+    const verifyToken = async (token, userID) => {
         try {
             const response = await axios.post(
                 `${import.meta.env.VITE_API_URL}/users/tokenverify`,
@@ -78,6 +79,7 @@ export default function App() {
             );
             setLoggedUser({
                 logged: true,
+                username: response.data.username,
                 name: response.data.name,
                 avatar: response.data.avatar,
             });
@@ -85,8 +87,8 @@ export default function App() {
             if (error.code === "ERR_NETWORK") {
                 setOfflineServerDialog(true);
             } else {
-                Cookies.remove("sessionToken");
-                Cookies.remove("sessionUserID");
+                Cookies.remove("token");
+                Cookies.remove("userID");
             }
             setLoggedUser({
                 logged: false,
@@ -97,17 +99,15 @@ export default function App() {
     };
 
     useEffect(() => {
-        const token = Cookies.get("sessionToken");
-        const userID = Cookies.get("sessionUserID");
-
-        console.log(token);
+        const token = Cookies.get("token");
+        const userID = Cookies.get("userID");
 
         if (token && userID) {
-            verifyToken();
+            verifyToken(token, userID);
         } else {
             checkServer();
         }
-    }, [loggedUser]);
+    }, []);
 
     const CssBaselineStyles = {
         typography: {
@@ -144,8 +144,10 @@ export default function App() {
             ...(darkMode
                 ? {
                       background: {
-                          default: "#121212",
-                          header: "#121212ef",
+                          default: "#000000",
+                          header: "#000000ef",
+                          dialog: "#121212",
+                          backdrop: "#000000af",
                       },
                       neutral: {
                           main: grey[200],
@@ -153,7 +155,10 @@ export default function App() {
                   }
                 : {
                       background: {
+                          default: "rgba(255,255, 255, 1)",
                           header: "rgba(255, 255, 255, 0.85)",
+                          dialog: "rgba(255, 255, 255, 1)",
+                          backdrop: "rgba(255, 255, 255, 0.9)",
                       },
                       neutral: {
                           main: grey[700],
@@ -169,26 +174,39 @@ export default function App() {
                 defaultOptions={{
                     confirmationButtonProps: { autoFocus: true },
                     dialogProps: {
-                        elevation: 0,
+                        disableScrollLock: true,
                         maxWidth: "xs",
+                        sx: {
+                            backgroundColor: (theme) =>
+                                theme.palette.background.backdrop,
+                        },
                         PaperProps: {
-                            elevation: 1,
+                            elevation: 0,
                             sx: {
                                 justfifyContent: "center",
                                 alignItems: "center",
                                 borderRadius: "15px",
+                                backgroundColor: (theme) =>
+                                    theme.palette.background.dialog,
                             },
+                        },
+                    },
+                    titleProps: {
+                        sx: {
+                            fontSize: "2rem",
                         },
                     },
                     confirmationButtonProps: {
                         color: "primary",
                         sx: {
+                            fontSize: "1rem",
                             borderRadius: "15px",
                         },
                     },
                     cancellationButtonProps: {
                         color: "secondary",
                         sx: {
+                            fontSize: "1rem",
                             borderRadius: "15px",
                         },
                     },
@@ -256,6 +274,8 @@ export default function App() {
                                 path="/profile"
                                 element={
                                     <ProfilePage
+                                        loggedUser={loggedUser}
+                                        showLoading={showLoading}
                                         setShowLoading={setShowLoading}
                                     />
                                 }

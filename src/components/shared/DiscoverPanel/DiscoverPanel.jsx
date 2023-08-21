@@ -178,7 +178,8 @@ export default function DiscoverPanel(props) {
                     }}
                     sx={{
                         transform: "rotate(180deg)",
-
+                        backgroundColor: (theme) =>
+                            theme.palette.background.default,
                         transition: (theme) => theme.transitions.create(),
                         "&:not(:last-child)": {
                             borderBottom: 0,
@@ -217,13 +218,25 @@ export default function DiscoverPanel(props) {
                     >
                         <UserButton
                             onClick={() => {
-                                props.setLoggedUser({
-                                    logged: false,
-                                    name: "",
-                                    avatar: "",
-                                });
-                                Cookies.remove("sessionToken");
-                                Cookies.remove("sessionUserID");
+                                confirmDialog({
+                                    title: "Logout",
+                                    description:
+                                        "Are you sure you want to logout?",
+                                    confirmationText: "Yes",
+                                    cancellationText: "No",
+                                })
+                                    .then(() => {
+                                        props.setLoggedUser({
+                                            logged: false,
+                                            name: "",
+                                            avatar: "",
+                                        });
+                                        Cookies.remove("sessionToken");
+                                        Cookies.remove("sessionUserID");
+                                    })
+                                    .catch(() => {
+                                        /* */
+                                    });
                             }}
                             startIcon={<Logout />}
                         >

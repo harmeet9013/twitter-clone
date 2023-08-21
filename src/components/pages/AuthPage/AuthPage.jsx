@@ -59,11 +59,11 @@ export default function AuthPage(props) {
             );
 
             // setup cookies with token and userid
-            Cookies.set("sessionToken", response.data.token, {
+            Cookies.set("token", response.data.token, {
                 expires: 1 / 24,
                 secure: true,
             });
-            Cookies.set("sessionUserID", response.data.userID, {
+            Cookies.set("userID", response.data.userID, {
                 expires: 1 / 24,
                 secure: true,
             });
@@ -71,6 +71,7 @@ export default function AuthPage(props) {
             // setup usestate with proper details
             props.setLoggedUser({
                 logged: true,
+                username: response.data.username,
                 name: response.data.name,
                 avatar: response.data.avatar,
             });
@@ -105,13 +106,12 @@ export default function AuthPage(props) {
                 }
             );
 
-            // ??BROKEN
             // setup cookies with token and userid
-            Cookies.set("sessionToken", response.data.token, {
+            Cookies.set("token", response.data.token, {
                 expires: 1 / 24,
                 secure: true,
             });
-            Cookies.set("sessionUserID", response.data.userID, {
+            Cookies.set("userID", response.data.userID, {
                 expires: 1 / 24,
                 secure: true,
             });
@@ -119,6 +119,7 @@ export default function AuthPage(props) {
             // update the loggeduser state
             props.setLoggedUser({
                 logged: true,
+                username: response.data.username,
                 name: response.data.name,
                 avatar: response.data.avatar,
             });
