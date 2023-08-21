@@ -1,8 +1,13 @@
-# React + Vite
+# Twitter clone
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A small (not really) clone of Twitter/X. Currently in heavy development.
 
-Currently, two official plugins are available:
+## Features
+* Material UI
+* System Theme integration
+* Signin/Signup User
+* Cookies storage (Token generation and authentication of session)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Notes
+Currently the backend server repository is private so the frontend code does not work enitrely. I will make more changes and the make the API public soon.
+
